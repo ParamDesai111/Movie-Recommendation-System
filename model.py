@@ -3,7 +3,7 @@ import numpy as np
 import re
 import nltk
 import argparse
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Ensuring nltk resources are donwloaded
@@ -74,7 +74,8 @@ def process_other_data(df):
 
 # Feature Extraction
 def create_model(df):
-    tfidf = TfidfVectorizer()
+    # tfidf = TfidfVectorizer()
+    tfidf = CountVectorizer()
     features = tfidf.fit_transform(df['clean_input'])
 
     cosine_sim = cosine_similarity(features, features)
