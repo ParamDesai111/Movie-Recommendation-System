@@ -3,7 +3,7 @@ import json
 import pandas as pd
 
 def fetch_movies():
-    url = "http://www.omdbapi.com/?t=Inside+Out+2&apikey=d9e6f70e"
+    url = "http://www.omdbapi.com/?t=Ant-Man&apikey=d9e6f70e"
     response = requests.get(url)
     # if response.status_code == 200:
     #     movie_data = response.json()  # Parse the JSON response
@@ -30,4 +30,9 @@ def print_movie_details(movie):
     print(f"Poster: {movie.get('Poster', 'N/A')}")
 
 # Fetch movie data
-print(fetch_movies())
+df = fetch_movies()
+
+print(df['Title'])
+print(df['Genre'])
+print(df['Actors'])
+print(df['Plot'])
