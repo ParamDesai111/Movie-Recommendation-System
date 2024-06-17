@@ -131,14 +131,15 @@ def process_other_data(df):
 
 # Feature Extraction
 def create_model(df):
-    tfidf = TfidfVectorizer()
+    # tfidf = TfidfVectorizer()
+    tfidf = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))
     features = tfidf.fit_transform(df['clean_input'])
     cosine_sim = cosine_similarity(features, features)
     
     # Debug: print some parts of the cosine similarity matrix
     print("Cosine Similarity Matrix Sample:")
     # print(cosine_sim[:5, :5])  # Print a small part of the matrix
-    print(cosine_sim)
+    print(cosine_sim[0])
     
     return cosine_sim
 
