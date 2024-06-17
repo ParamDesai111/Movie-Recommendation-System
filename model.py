@@ -25,34 +25,18 @@ def load_movie_from_api(title):
         print("Failed to fetch data:", response.status_code)
     return pd.DataFrame()
 
-def check_columns(df):
-    expected_columns = ['title', 'plot', 'genre', 'cast', 'director']
-    for col in expected_columns:
-        if col not in df.columns:
-            df[col] = ""  # Add missing columns as empty strings to prevent key errors
-    return df
 
 
 #Load Dataset
 def load_data(file_path):
-    try:
-        df = pd.read_csv(file_path)
-        return df
-    except Exception as e:
-        print(f"Failed to load the data file: {e}")
-        return pd.DataFrame()
-
-def process_api_data(api_df):
-    if not api_df.empty:
-        api_df.rename(columns={'Plot': 'plot', 'Genre': 'genre', 'Actors': 'cast', 'Director': 'director'}, inplace=True)
-        api_df = process_plot_data(api_df)
-        api_df = process_other_data(api_df)
-    return api_df
-
+    df = pd.read_csv(file_path)
+    return df
 
 def combine_data(api_title, csv_file_path):
     api_df = load_movie_from_api(api_title)
-    api_df = process_api_data(api_df)
+    if not api_df.empty:
+        api_df = process_plot_data(api_df)
+        api_df = process_other_data(api_df)
 
     csv_df = load_data(csv_file_path)
     csv_df = process_plot_data(csv_df)
@@ -68,21 +52,24 @@ def process_plot_data(df):
     # nltk.download('punkt')
     # nltk.download('stopwords')
 
-    if 'plot' in df.columns:
-        # Ensure the plot column is a string and handle NaNs by replacing them with an empty string
-        df['plot'] = df['plot'].fillna('')  # Replace NaN with empty string
-        df['clean_plot'] = df['plot'].str.lower()
+    # Convert plot descriptions to lowercase
 
-        # Remove numbers and punctuation
-        df['clean_plot'] = df['clean_plot'].apply(lambda x: re.sub('[^a-zA-Z]', ' ', x))
-        df['clean_plot'] = df['clean_plot'].apply(lambda x: re.sub('\s+', ' ', x).strip())
+    df['clean_plot'] = df['Plot'].str.lower()
 
-        # Tokenize the sentences
-        df['clean_plot'] = df['clean_plot'].apply(nltk.word_tokenize)
+    # Remove numbers and punctuation
 
-        # Remove stopwords
-        stop_words = nltk.corpus.stopwords.words('english')
-        df['clean_plot'] = df['clean_plot'].apply(lambda sentence: [word for word in sentence if word not in stop_words and len(word) >= 3])
+    df['clean_plot'] = df['clean_plot'].apply(lambda x: re.sub('[^a-zA-Z]', ' ', x))
+    df['clean_plot'] = df['clean_plot'].apply(lambda x: re.sub('\s+', ' ', x).strip())
+
+    # Tokenize the sentences
+
+    df['clean_plot'] = df['clean_plot'].apply(nltk.word_tokenize)
+
+    # Remove stopwords
+
+    stop_words = nltk.corpus.stopwords.words('english')
+    df['clean_plot'] = df['clean_plot'].apply(lambda sentence: [word for word in sentence if word not in stop_words and len(word) >= 3])
+
     return df
 
 # To clean the sentence all lower and remove all the spaces
@@ -92,82 +79,54 @@ def clean(sentence):
         temp.append(word.lower().replace(' ',''))
     return temp
 
-# def process_other_data(df):
-#     df['genre'] = df['genre'].apply(lambda x: x.split(','))
-#     df['cast'] = df['cast'].apply(lambda x: x.split(',')[:4]) # Getting the top 4 actors
-#     df['director'] = df['director'].apply(lambda x: x.split(',')[:1]) # Getting 1 director
-#     df['genre'] = [clean(x) for x in df['Genre']]
-#     df['actors'] = [clean(x) for x in df['Actors']]
-#     df['director'] = [clean(x) for x in df['Director']]
-
-#     #combine all of the preproccesing into another dataframe
-
-#     columns = ['clean_plot', 'Genre', 'Actors', 'Director']
-#     l = []
-
-#     for i in range(len(df)):
-#         words = ''
-#         for col in columns:
-#             words += ' '.join(df[col][i]) + ' '
-#         l.append(words)
-
-#     df['clean_input'] = l
-#     df = df[['Title', 'clean_input']]
-#     df.head() #Processed with the title with the input from genre, plot, actors and director
-
-#     return df
-
 def process_other_data(df):
-    if all(col in df.columns for col in ['genre', 'cast', 'director']):
-        df['genre'] = df['genre'].apply(lambda x: x.split(',') if isinstance(x, str) else [])
-        df['cast'] = df['cast'].apply(lambda x: x.split(',')[:4] if isinstance(x, str) else [])
-        df['director'] = df['director'].apply(lambda x: x.split(',')[:1] if isinstance(x, str) else [])
-        df['genre'] = [clean(x) for x in df['genre']]
-        df['actors'] = [clean(x) for x in df['cast']]
-        df['director'] = [clean(x) for x in df['director']]
-        columns = ['clean_plot', 'genre', 'actors', 'director']
-        df['clean_input'] = df.apply(lambda row: ' '.join([' '.join(row[col]) for col in columns]), axis=1)
+    df['Genre'] = df['Genre'].apply(lambda x: x.split(','))
+    df['Actors'] = df['Actors'].apply(lambda x: x.split(',')[:4]) # Getting the top 4 actors
+    df['Director'] = df['Director'].apply(lambda x: x.split(',')[:1]) # Getting 1 director
+    df['Genre'] = [clean(x) for x in df['Genre']]
+    df['Actors'] = [clean(x) for x in df['Actors']]
+    df['Director'] = [clean(x) for x in df['Director']]
+
+    #combine all of the preproccesing into another dataframe
+
+    columns = ['clean_plot', 'Genre', 'Actors', 'Director']
+    l = []
+
+    for i in range(len(df)):
+        words = ''
+        for col in columns:
+            words += ' '.join(df[col][i]) + ' '
+        l.append(words)
+
+    df['clean_input'] = l
+    df = df[['Title', 'clean_input']]
+    df.head() #Processed with the title with the input from genre, plot, actors and director
+
     return df
 
 # Feature Extraction
 def create_model(df):
     # tfidf = TfidfVectorizer()
-    tfidf = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))
+    tfidf = CountVectorizer()
     features = tfidf.fit_transform(df['clean_input'])
+
     cosine_sim = cosine_similarity(features, features)
-    
-    # Debug: print some parts of the cosine similarity matrix
-    print("Cosine Similarity Matrix Sample:")
-    # print(cosine_sim[:5, :5])  # Print a small part of the matrix
-    print(cosine_sim[0])
-    
+
     return cosine_sim
 
-
-# def get_recommendations(title, cosine_sim, df):
-#     index = pd.Series(df['Title'])
-#     movies = [] #movies to reccomend
-#     idx = index[index == title].index[0]
-#     #print(idx)
-
-#     score = pd.Series(cosine_sim[idx]).sort_values(ascending=False) #higher the score the top movie to reccomend
-#     top10 = list(score.iloc[1:11].index)#(index locater)
-#     #print(top10)
-
-#     for i in top10:
-#         movies.append(df['Title'][i])
-#     return movies
 def get_recommendations(title, cosine_sim, df):
-    try:
-        titles = df['title'].tolist()  # Make sure to use 'title' instead of 'Title'
-        idx = titles.index(title)
-        score = pd.Series(cosine_sim[idx]).sort_values(ascending=False)
-        top_indices = list(score.iloc[1:11].index)  # Adjust based on needed output
-        recommended_movies = df.iloc[top_indices]['title'].tolist()  # Using 'title' here
-        return recommended_movies
-    except Exception as e:
-        print(f"Error in generating recommendations: {e}")
-        return []
+    index = pd.Series(df['Title'])
+    movies = [] #movies to reccomend
+    idx = index[index == title].index[0]
+    #print(idx)
+
+    score = pd.Series(cosine_sim[idx]).sort_values(ascending=False) #higher the score the top movie to reccomend
+    top10 = list(score.iloc[1:11].index)#(index locater)
+    #print(top10)
+
+    for i in top10:
+        movies.append(df['Title'][i])
+    return movies
 
 
 # def main():
@@ -189,48 +148,24 @@ def get_recommendations(title, cosine_sim, df):
 #     for movie in movies:
 #         print(movie)
 
-# def main():
-#     parser = argparse.ArgumentParser(description="Movie Recommendation Engine")
-#     parser.add_argument('--data', type=str, help='Path to the movie dataset CSV file', required=True)
-#     parser.add_argument('--title', type=str, help='Movie title for recommendations', required=True)
-#     args = parser.parse_args()
-
-#     # Combine data from API and CSV
-#     combined_df = combine_data(args.title, args.data)
-
-#     # Process and create the model from the combined data
-#     cosine_sim = create_model(combined_df)
-
-#     # Get recommendations based on the combined data
-#     movies = get_recommendations(args.title, cosine_sim, combined_df)
-
-#     print(f"Recommendations for '{args.title}': ")
-#     for movie in movies:
-#         print(movie)
-
-# if __name__ == "__main__":
-#     main()
-
 def main():
     parser = argparse.ArgumentParser(description="Movie Recommendation Engine")
     parser.add_argument('--data', type=str, help='Path to the movie dataset CSV file', required=True)
     parser.add_argument('--title', type=str, help='Movie title for recommendations', required=True)
     args = parser.parse_args()
 
+    # Combine data from API and CSV
     combined_df = combine_data(args.title, args.data)
-    combined_df = check_columns(combined_df)  # Check and correct columns after loading and combining data
 
-    if not combined_df.empty:
-        combined_df = process_plot_data(combined_df)
-        combined_df = process_other_data(combined_df)
-        cosine_sim = create_model(combined_df)
-        movies = get_recommendations(args.title, cosine_sim, combined_df)
+    # Process and create the model from the combined data
+    cosine_sim = create_model(combined_df)
 
-        print(f"Recommendations for '{args.title}':")
-        for movie in movies:
-            print(movie)
-    else:
-        print("No data available for processing.")
+    # Get recommendations based on the combined data
+    movies = get_recommendations(args.title, cosine_sim, combined_df)
+
+    print(f"Recommendations for '{args.title}': ")
+    for movie in movies:
+        print(movie)
 
 if __name__ == "__main__":
     main()

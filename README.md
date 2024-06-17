@@ -1,5 +1,5 @@
 # Movie Reccomendation System
- CSV Dataset being used here, practice for when actual app being created
+ Recommendations are in CSV, API calls any movie
 
  ## Libraries
  - pandas
