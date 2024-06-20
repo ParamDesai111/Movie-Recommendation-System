@@ -441,6 +441,9 @@ def get_recommendations(title, cosine_sim, df):
         score = pd.Series(cosine_sim[idx]).sort_values(ascending=False)
         top_indices = list(score.iloc[1:11].index)  # Adjust based on needed output
         recommended_movies = df.iloc[top_indices]['title'].tolist()  # Using 'title' here
+        print(f"Recommendations for '{title}':")
+        for movie in recommended_movies:
+            print(movie)
         return recommended_movies
     except Exception as e:
         print(f"Error in generating recommendations: {e}")
