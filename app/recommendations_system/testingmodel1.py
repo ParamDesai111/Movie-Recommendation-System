@@ -488,26 +488,26 @@ def get_recommendations(title, cosine_sim, df):
 # if __name__ == "__main__":
 #     main()
 
-# def main():
-#     parser = argparse.ArgumentParser(description="Movie Recommendation Engine")
-#     parser.add_argument('--data', type=str, help='Path to the movie dataset CSV file', required=True)
-#     parser.add_argument('--title', type=str, help='Movie title for recommendations', required=True)
-#     args = parser.parse_args()
+def main():
+    parser = argparse.ArgumentParser(description="Movie Recommendation Engine")
+    parser.add_argument('--data', type=str, help='Path to the movie dataset CSV file', required=True)
+    parser.add_argument('--title', type=str, help='Movie title for recommendations', required=True)
+    args = parser.parse_args()
 
-#     combined_df = combine_data(args.title, args.data)
-#     combined_df = check_columns(combined_df)  # Check and correct columns after loading and combining data
+    combined_df = combine_data(args.title, args.data)
+    combined_df = check_columns(combined_df)  # Check and correct columns after loading and combining data
 
-#     if not combined_df.empty:
-#         combined_df = process_plot_data(combined_df)
-#         combined_df = process_other_data(combined_df)
-#         cosine_sim = create_model(combined_df)
-#         movies = get_recommendations(args.title, cosine_sim, combined_df)
+    if not combined_df.empty:
+        combined_df = process_plot_data(combined_df)
+        combined_df = process_other_data(combined_df)
+        cosine_sim = create_model(combined_df)
+        movies = get_recommendations(args.title, cosine_sim, combined_df)
 
-#         print(f"Recommendations for '{args.title}':")
-#         for movie in movies:
-#             print(movie)
-#     else:
-#         print("No data available for processing.")
+        print(f"Recommendations for '{args.title}':")
+        for movie in movies:
+            print(movie)
+    else:
+        print("No data available for processing.")
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
