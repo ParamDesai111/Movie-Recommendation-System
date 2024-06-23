@@ -9,6 +9,7 @@
 
  ## Algorithm
  - Content-Based Filtering
+- NLP (Future)
 
 
 ## Installation
