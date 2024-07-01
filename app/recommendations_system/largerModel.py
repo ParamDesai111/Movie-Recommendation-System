@@ -296,12 +296,23 @@ def load_movie_from_api(title):
     if response.status_code == 200:
         movie_data = response.json()
         if movie_data['Response'] == 'True':
+            print_movie_details(movie_data)
             return pd.DataFrame([movie_data])  # Convert single movie data into a DataFrame
         else:
             print("Movie not found")
     else:
         print("Failed to fetch data:", response.status_code)
     return pd.DataFrame()
+
+def print_movie_details(movie):
+    print("Movie Details:")
+    print(f"Title: {movie.get('Title', 'N/A')}")
+    print(f"Genre: {movie.get('Genre', 'N/A')}")
+    print(f"Director: {movie.get('Director', 'N/A')}")
+    print(f"Actors: {movie.get('Actors', 'N/A')}")
+    print(f"Plot: {movie.get('Plot', 'N/A')}")
+    print(f"Poster: {movie.get('Poster', 'N/A')}")
+
 
 def check_columns(df):
     expected_columns = ['title', 'plot', 'genre', 'cast', 'director']
