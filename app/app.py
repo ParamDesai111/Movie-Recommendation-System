@@ -58,7 +58,7 @@
 # # if __name__ == '__main__':
 # #     app.run(debug=True)
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 from recommendations_system.model import combine_data, create_model, get_recommendations
 
 app = Flask(__name__)
@@ -83,6 +83,7 @@ def recommend():
         recommendations = ["Please provide a valid movie title."]
     return render_template('recommendations.html', recommendations=recommendations)
 
-if __name__ != '__main__':
+if __name__ == '__main__':
+    app.run(debug=True)
+else:
     gunicorn_app = app
-
