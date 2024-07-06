@@ -5,5 +5,4 @@ pandas
 scikit-learn
 nltk
 requests
-json
 argparse
