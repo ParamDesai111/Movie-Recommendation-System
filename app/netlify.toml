@@ -2,6 +2,6 @@
   command = "pip install -r requirements.txt"
 
 [[redirects]]
-  from = "/*"
+  from = "templates/index.html"
   to = "/"
   status = 200
