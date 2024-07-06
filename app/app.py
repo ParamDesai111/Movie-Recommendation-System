@@ -58,7 +58,7 @@
 # # if __name__ == '__main__':
 # #     app.run(debug=True)
 
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template
 from recommendations_system.model import combine_data, create_model, get_recommendations
 
 app = Flask(__name__)
@@ -76,8 +76,6 @@ def index():
 def recommend():
     movie_title = request.form['title']
     if movie_title:
-        combined_df = combine_data(movie_title, csv_file_path)
-        cosine_sim = create_model(combined_df)
         recommendations = get_recommendations(movie_title, cosine_sim, combined_df)
     else:
         recommendations = ["Please provide a valid movie title."]
