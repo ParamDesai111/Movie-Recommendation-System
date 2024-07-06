@@ -8,7 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Ensuring nltk resources are donwloaded
-# nltk.download('punkt')
+nltk.download('punkt')
 
 # Load data from API
 def load_movie_from_api(title):
@@ -49,8 +49,8 @@ def combine_data(api_title, csv_file_path):
 def process_plot_data(df):
     # Ensure required resources are downloaded
 
-    # nltk.download('punkt')
-    # nltk.download('stopwords')
+    nltk.download('punkt')
+    nltk.download('stopwords')
 
     # Convert plot descriptions to lowercase
 
