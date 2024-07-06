@@ -8,7 +8,7 @@ csv_file_path = 'IMDB_Top250Engmovies2_OMDB_Detailed.csv'  # The correct path to
 combined_df = combine_data("", csv_file_path)
 cosine_sim = create_model(combined_df)
 
-# Use real Data
+# Use real Data pushing commits
 
 @app.route('/')
 def index():
