@@ -7,3 +7,5 @@
 
 SELECT * FROM cleaned_data
 WHERE title LIKE '%';
+
+-- TRUNCATE TABLE cleaned_data;

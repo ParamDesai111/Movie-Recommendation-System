@@ -92,7 +92,6 @@ import configparser
 
 app = Flask(__name__)
 
-# Azure SQL Database Connection
 def read_config():
     config = configparser.ConfigParser()
     config.read('recommendations_system/config.ini')
@@ -108,7 +107,6 @@ serveradminlogin = read_config()['serveradminlogin']
 serveradminpassword = read_config()['serveradminpassword']
 database = read_config()['database']
 servername = read_config()['servername']
-
 
 # Load and process data once on startup
 combined_df = fetch_sql_data(servername, database, serveradminlogin, serveradminpassword)
