@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,8 +17,9 @@
         <a href="/">Go back</a>
     </div>
 </body>
-</html>
-<!-- 
+</html> -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,13 +30,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>Recommendations for </h1>
+        <h1>Recommendations for "{{ movie_title }}"</h1>
         <ul>
-            {% for movie in recommendations %}
-                <li>{{ movie }}</li>
+            {% for movie in recommendations.itertuples() %}
+                <li>
+                    <div class="movie-title">{{ movie.Title }}</div>
+                    <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" class="movie-poster">
+                </li>
             {% endfor %}
         </ul>
         <a href="/">Go back</a>
     </div>
 </body>
-</html> -->
+</html>
+

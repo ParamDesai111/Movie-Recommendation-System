@@ -7,7 +7,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .container {
@@ -15,12 +15,14 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    max-width: 500px;
-    width: 100%;
+    max-width: 90%;
+    width: 600px;
+    text-align: center;
+    margin: 20px;
 }
 
 h1 {
-    text-align: center;
+    font-size: 1.8em;
     margin-bottom: 20px;
 }
 
@@ -35,7 +37,7 @@ label {
 }
 
 input[type="text"] {
-    width: calc(100% - 20px);
+    width: calc(100% - 22px);
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
@@ -75,4 +77,33 @@ button:hover {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+li {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.movie-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 10px 0;
+}
+
+.movie-poster {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
 }

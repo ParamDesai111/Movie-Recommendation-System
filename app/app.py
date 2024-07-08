@@ -123,12 +123,13 @@ def recommend():
         new_combined_df = combine_data(movie_title, servername, database, serveradminlogin, serveradminpassword)
         new_cosine_sim = create_model(new_combined_df)
         recommendations = get_recommendations(movie_title, new_cosine_sim, new_combined_df)
+        recommended_movies = new_combined_df[new_combined_df['Title'].isin(recommendations)][['Title', 'Poster']]
     else:
-        recommendations = ["Please provide a valid movie title."]
-    return render_template('recommendations.html', recommendations=recommendations)
+        recommendations = []
+        recommended_movies = pd.DataFrame(columns=['Title', 'Poster'])
+    return render_template('recommendations.html', recommendations=recommended_movies, movie_title=movie_title)
 
 if __name__ == '__main__':
     app.run(debug=True)
 else:
     gunicorn_app = app
-

@@ -6,6 +6,6 @@
 -- );
 
 SELECT * FROM cleaned_data
-WHERE title LIKE '%';
+WHERE title = 'The Avengers';
 
 -- TRUNCATE TABLE cleaned_data;
