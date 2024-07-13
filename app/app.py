@@ -89,6 +89,7 @@
 from flask import Flask, request, render_template
 from recommendations_system.modelSql import combine_data, create_model, get_recommendations, fetch_sql_data
 import configparser
+import pandas as pd
 
 app = Flask(__name__)
 
