@@ -1,4 +1,4 @@
-# Movie Reccomendation System
+# Movie Recommendation System
  Recommendations are in CSV, API calls any movie
 
  ## Libraries
@@ -18,3 +18,8 @@
    ```bash
    git clone https://github.com/ParamDesai111/Movie-Reccomendation-System
    cd movie_recommendation_app
+   ```
+2. Start this application
+   ```bash
+   python app.py
+   ```
